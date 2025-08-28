@@ -4,7 +4,7 @@ pub struct Options {
 
 
 impl Options {
-    fn new(passwd_len: usize, passwd_enc: bool) -> Options {
+    fn new(passwd_len: usize) -> Options {
         Options {
             password_length: passwd_len,
         }
