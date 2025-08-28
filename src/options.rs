@@ -1,15 +1,15 @@
 pub struct Options {
-    password_length: usize,
+    password_length: u16,
 }
 
 
 impl Options {
-    fn new(passwd_len: usize) -> Options {
+    pub fn new(passwd_len: u16) -> Options {
         Options {
             password_length: passwd_len,
         }
     }
-    fn get_password_length(&self) -> usize {
+    pub fn get_password_length(&self) -> u16 {
         self.password_length
     }
 }
