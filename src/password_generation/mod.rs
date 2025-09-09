@@ -19,12 +19,12 @@ pub enum UnicodeGroup {
 }
 
 /// This function borrows a ThreadRng both to choose a random Unicode group
-/// and to generate a random character from that group.
-pub fn generate_random_character(rng: &mut ThreadRng) -> u32 {
+/// and to generate a random Unicode code point from that group.
+pub fn generate_random_code_point(rng: &mut ThreadRng) -> u32 {
     let unicode_grp_chosen = choose_unicode_group(rng
         .next_u32());
 
-    // Return a random character using the RNG based on the chosen Unicode group.
+    // Return a random Unicode code point using the RNG based on the chosen Unicode group.
     match unicode_grp_chosen {
         Some(UnicodeGroup::BasicLatin) => {
             let random_character = rng.random_range(33..=126) as u32;
@@ -61,6 +61,9 @@ pub fn generate_random_character(rng: &mut ThreadRng) -> u32 {
             let random_character = rng.random_range(12449..=12532);
             random_character
         },
+        // When Hangul is chosen, it generates a random Unicode code point
+        // from the "Hangul Syllables" Unicode block, which represents
+        // the actual syllables used in normal Korean writing.
         Some(UnicodeGroup::Hangul) => {
             let random_character = rng.random_range(44032..=55203);
             random_character
@@ -69,7 +72,7 @@ pub fn generate_random_character(rng: &mut ThreadRng) -> u32 {
             // The Option<T> variable `unicode_grp_chosen` cannot be None,
             // obviously because the modulo `a % b` operator always returns a number
             // between 0 and b, both inclusive.
-            // However, I included a None check just for correctness.
+            // However, I included a None match arm just for correctness.
             eprintln!("Error: There was not a Unicode group selected, this is an internal bug.");
             eprintln!("Submit a bug report to https://github.com/Fahad2001422/fahad_password_generator");
             process::exit(17);
@@ -77,8 +80,9 @@ pub fn generate_random_character(rng: &mut ThreadRng) -> u32 {
     }
 }
 
-/// This function returns a Unicode group to generate a character from
-/// based on the `number` passed.
+/// This function returns a randomly Unicode chosen group to
+/// generate a Unicode code point from that group based on
+/// the `number` passed.
 fn choose_unicode_group(number: u32) -> Option<UnicodeGroup> {
     match number % 9 {
         0 => Some(UnicodeGroup::BasicLatin),
